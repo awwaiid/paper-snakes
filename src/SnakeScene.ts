@@ -155,7 +155,7 @@ class Snake {
 
 
 
-export default class HelloWorldScene extends Phaser.Scene {
+export default class SnakeScene extends Phaser.Scene {
 
   snake!: Snake;
   debugText!: Phaser.GameObjects.Text;
