@@ -171,7 +171,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 		// this.load.image('sky', 'assets/skies/space3.png')
 		// this.load.image('logo', 'assets/sprites/phaser3-logo.png')
 		// this.load.image('red', 'assets/particles/red.png')
-		this.load.spritesheet('snakeBody', '/snake-body.png', {
+		this.load.spritesheet('snakeBody', 'paper-snakes/snake-body.png', {
       frameWidth: 50,
       frameHeight: 50
     });
