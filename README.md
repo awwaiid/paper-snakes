@@ -4,6 +4,8 @@
 
 ![License](https://img.shields.io/badge/license-GPL-blue)
 
+[Play here!](https://awwaiid.github.io/paper-snakes/)
+
 ## How to Play
 
 Use arrow-keys to turn. Use spacebar to jump over things!
