@@ -44,7 +44,7 @@ class Snake {
       // Update the head's position based on the current direction
       this.head.x += this.direction.x * 50;
       this.head.y += this.direction.y * 50;
-      this.head.rotation = Math.atan2(this.direction.y, this.direction.x);
+      this.head.rotation = Math.atan2(-1 * this.direction.y, -1*this.direction.x);
 
       this.headShadow.setRotation(this.head.rotation);
       this.headShadow.setPosition(this.head.x + 10, this.head.y + 10);
@@ -61,10 +61,12 @@ class Snake {
   grow() {
     // const newSegment = this.scene.add.sprite(this.tail.x, this.tail.y, 'body');
 
-    const segmentFrame = Math.floor(Math.random() * 16);
+    // const segmentFrame = Math.floor(Math.random() * 16);
+    const segmentFrame = (this.body.getLength() + 1) % 16;
     const newSegment = this.scene.add.sprite(0, 0, 'snakeBody', segmentFrame);
 
     newSegment.setData('isJumping', 0);
+    newSegment.setVisible(0);
     this.body.add(newSegment);
 
     const shadow = this.scene.add.sprite(0, 0, 'snakeBody', segmentFrame);
@@ -106,9 +108,11 @@ class Snake {
       const oldSegmentPos = new Phaser.Math.Vector2(firstSegment.x, firstSegment.y);
       let oldSegmentIsJumping = firstSegment.getData('isJumping');
 
-      firstSegment.rotation = Math.atan2(oldHeadPos.y - firstSegment.y, oldHeadPos.x - firstSegment.x);
+      // firstSegment.rotation = Math.atan2(oldHeadPos.y - firstSegment.y, oldHeadPos.x - firstSegment.x);
+      firstSegment.rotation = Math.atan2(-1 * (oldHeadPos.y - firstSegment.y), -1 * (oldHeadPos.x - firstSegment.x));
       firstSegment.setData('isJumping', oldHeadIsJumping);
       firstSegment.setPosition(oldHeadPos.x, oldHeadPos.y);
+      firstSegment.setVisible(1);
 
       const firstSegmentShadow = this.bodyShadow.getFirst(true) as Phaser.GameObjects.Sprite;
       firstSegmentShadow.setPosition(firstSegment.x + 10, firstSegment.y + 10);
@@ -120,8 +124,9 @@ class Snake {
           const sprite = segment as Phaser.GameObjects.Sprite;
           const temp = new Phaser.Math.Vector2(sprite.x, sprite.y);
 
-          sprite.rotation = Math.atan2(oldSegmentPos.y - sprite.y, oldSegmentPos.x - sprite.x);
+          sprite.rotation = Math.atan2(-1 * (oldSegmentPos.y - sprite.y), -1 * (oldSegmentPos.x - sprite.x));
           sprite.setPosition(oldSegmentPos.x, oldSegmentPos.y);
+          sprite.setVisible(1);
           oldSegmentPos.copy(temp);
 
           const isJumping = sprite.getData('isJumping');
@@ -231,7 +236,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
 
     // this.input.enabled = true;
-    this.debugText = this.add.text(10, 10, '', {
+    this.debugText = this.add.text(10, 10, 'GROUND', {
       fontSize: '24px',
       color: '#ffffff',
       backgroundColor: '#000000',
