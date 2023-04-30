@@ -6,6 +6,8 @@
 
 [Play here!](https://awwaiid.github.io/paper-snakes/)
 
+![Paper Snake demo](paper-snake-v1.gif) _GIF demonstrating Paper Snake. Red shadows are when the snake is jumping._
+
 ## How to Play
 
 Use arrow-keys to turn. Use spacebar to jump over things!
