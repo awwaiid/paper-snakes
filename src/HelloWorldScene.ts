@@ -9,7 +9,7 @@ class Snake {
   private direction: Phaser.Math.Vector2;
   private lastMoveTime: number;
   private moveDelay: number;
-  private isJumping: number;
+  private isJumping: boolean;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.scene = scene;
@@ -24,15 +24,15 @@ class Snake {
     this.headShadow.setTintFill(0xff0000); // Set the tint to black
     this.headShadow.setAlpha(0.5); // Set the alpha to 0.5 (50% transparency)
     this.headShadow.setDepth(-1); // Set the depth lower than the segments
-    this.headShadow.setVisible(0);
+    this.headShadow.setVisible(false);
 
 
     this.body = this.scene.add.group();
     this.bodyShadow = this.scene.add.group();
-    this.isJumping = 0;
+    this.isJumping = false;
   }
 
-  setIsJumping(z: number) {
+  setIsJumping(z: boolean) {
     this.isJumping = z;
   }
 
@@ -65,15 +65,15 @@ class Snake {
     const segmentFrame = (this.body.getLength() + 1) % 16;
     const newSegment = this.scene.add.sprite(0, 0, 'snakeBody', segmentFrame);
 
-    newSegment.setData('isJumping', 0);
-    newSegment.setVisible(0);
+    newSegment.setData('isJumping', false);
+    newSegment.setVisible(false);
     this.body.add(newSegment);
 
     const shadow = this.scene.add.sprite(0, 0, 'snakeBody', segmentFrame);
     shadow.setTintFill(0xff0000); // Set the tint to black
     shadow.setAlpha(0.5); // Set the alpha to 0.5 (50% transparency)
     shadow.setDepth(-1); // Set the depth lower than the segments
-    shadow.setVisible(0);
+    shadow.setVisible(false);
     this.bodyShadow.add(shadow);
 
   }
@@ -102,7 +102,7 @@ class Snake {
     );
   }
 
-  updateBodyPositions(oldHeadPos: Phaser.Math.Vector2, oldHeadIsJumping: number) {
+  updateBodyPositions(oldHeadPos: Phaser.Math.Vector2, oldHeadIsJumping: boolean) {
     if (this.body.getLength() > 0) {
       const firstSegment = this.body.getFirst(true) as Phaser.GameObjects.Sprite;
       const oldSegmentPos = new Phaser.Math.Vector2(firstSegment.x, firstSegment.y);
@@ -112,7 +112,7 @@ class Snake {
       firstSegment.rotation = Math.atan2(-1 * (oldHeadPos.y - firstSegment.y), -1 * (oldHeadPos.x - firstSegment.x));
       firstSegment.setData('isJumping', oldHeadIsJumping);
       firstSegment.setPosition(oldHeadPos.x, oldHeadPos.y);
-      firstSegment.setVisible(1);
+      firstSegment.setVisible(true);
 
       const firstSegmentShadow = this.bodyShadow.getFirst(true) as Phaser.GameObjects.Sprite;
       firstSegmentShadow.setPosition(firstSegment.x + 10, firstSegment.y + 10);
@@ -126,7 +126,7 @@ class Snake {
 
           sprite.rotation = Math.atan2(-1 * (oldSegmentPos.y - sprite.y), -1 * (oldSegmentPos.x - sprite.x));
           sprite.setPosition(oldSegmentPos.x, oldSegmentPos.y);
-          sprite.setVisible(1);
+          sprite.setVisible(true);
           oldSegmentPos.copy(temp);
 
           const isJumping = sprite.getData('isJumping');
@@ -157,8 +157,9 @@ class Snake {
 
 export default class HelloWorldScene extends Phaser.Scene {
 
-  snake: Snake;
-  private debugText: Phaser.GameObjects.Text;
+  snake!: Snake;
+  debugText!: Phaser.GameObjects.Text;
+  gameOver: boolean = false;
 
 	constructor() {
 		super('hello-world');
@@ -227,12 +228,12 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     this.input.keyboard.on("keydown-SPACE", () => {
       this.debugText.setText("JUMP");
-      this.snake.setIsJumping(1);
+      this.snake.setIsJumping(true);
     });
 
     this.input.keyboard.on("keyup-SPACE", () => {
       this.debugText.setText("GROUND");
-      this.snake.setIsJumping(0);
+      this.snake.setIsJumping(false);
     });
 
     // this.input.enabled = true;
@@ -259,7 +260,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.gameOver = true;
       }
 
-      if(this.snake.isOutOfBounds()) {
+      if(this.snake.isOutOfBounds(800, 600)) {
         this.gameOver = true;
       }
     }
